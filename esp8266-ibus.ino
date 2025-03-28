@@ -16,26 +16,47 @@ struct Menu {
 };
 
 // Определяем пункты меню
-Menu menuRoot = { "Главное меню", nullptr, {}, 0 };
-Menu menuSettings = { "Настройки", &menuRoot, {}, 0 };
-Menu menuDiagnostics = { "Диагностика", &menuRoot, {}, 0 };
-Menu menuPlayer = { "Плеер", &menuRoot, {}, 0 };
-Menu menuCoding = { "Кодирование", &menuRoot, {}, 0 };
+Menu menuRoot = { "Main menu", nullptr, {}, 0 };
+Menu menuSettings = { "Settings", &menuRoot, {}, 0 };
+Menu menuDiagnostics = { "Diagnostic", &menuRoot, {}, 0 };
+Menu menuPlayer = { "Player", &menuRoot, {}, 0 };
+Menu menuCoding = { "Testing", &menuRoot, {}, 0 };
 
-Menu menuLang = { "Язык", &menuSettings, {}, 0 };
-Menu menuClock = { "Часы", &menuSettings, {}, 0 };
-Menu menuLight = { "Свет", &menuSettings, {}, 0 };
+Menu menuLang = { "Language", &menuSettings, {}, 0 };
+Menu menuClock = { "Clock", &menuSettings, {}, 0 };
+Menu menuLight = { "Linghts", &menuSettings, {}, 0 };
 
-Menu menuEngine = { "Двигатель", &menuDiagnostics, {}, 0 };
-Menu menuGearbox = { "Коробка", &menuDiagnostics, {}, 0 };
+Menu menuEngine = { "Engine", &menuDiagnostics, {}, 0 };
+Menu menuGearbox = { "Transmission", &menuDiagnostics, {}, 0 };
 
-Menu menuOption1 = { "Опция 1", &menuCoding, {}, 0 };
-Menu menuOption2 = { "Опция 2", &menuCoding, {}, 0 };
-Menu menuOption3 = { "Опция 3", &menuCoding, {}, 0 };
-Menu menuOption4 = { "Опция 4", &menuCoding, {}, 0 };
-Menu menuOption5 = { "Опция 5", &menuCoding, {}, 0 };
-Menu menuOption6 = { "Опция 6", &menuCoding, {}, 0 };
-Menu menuOption7 = { "Опция 7", &menuCoding, {}, 0 };
+
+
+
+
+const char title1[] = { 101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120 };
+Menu menuOption1 = { title1, &menuCoding, {}, 0 };
+
+const char title2[] = { 121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140 };
+Menu menuOption2 = { title2, &menuCoding, {}, 0 };
+
+const char title3[] = { 141,142,143,143,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160 };
+Menu menuOption3= { title3, &menuCoding, {}, 0 };
+
+const char title4[] = { 161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180 };
+Menu menuOption4 = { title4, &menuCoding, {}, 0 };
+
+const char title5[] = { 181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200 };
+Menu menuOption5 = { title5, &menuCoding, {}, 0 };
+
+const char title6[] = { 201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220 };
+Menu menuOption6 = { title6, &menuCoding, {}, 0 };
+
+const char title7[] = { 221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240 };
+Menu menuOption7 = { title7, &menuCoding, {}, 0 };
+
+const char title8[] = { 241,242,243,245,246,247,248,249,250,251,252,253,254,255 };
+Menu menuOption8 = { title8, &menuCoding, {}, 0 };
+
 
 // Связываем меню
 void setupMenu() {
@@ -61,7 +82,8 @@ void setupMenu() {
   menuCoding.children[4] = &menuOption5;
   menuCoding.children[5] = &menuOption6;
   menuCoding.children[6] = &menuOption7;
-  menuCoding.childrenCount = 7;
+  menuCoding.children[7] = &menuOption8;
+  menuCoding.childrenCount = 8;
 }
 
 // Текущее меню
@@ -69,9 +91,9 @@ Menu *currentMenu = &menuRoot;
 
 void displayMenu(Menu *menu) {
 
-
-  uint8_t data[] = {0x62, 0x10, 0x41, 0x55, 0x58, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20}; 
-    sendPacket(0x68, 0x3B, 0x21, data, sizeof(data));
+  //clear
+  uint8_t data[] = { 0xF0, 0x00, 0x00, 0x20 };
+  sendPacket(0x68, 0x3B, 0xA5, data, sizeof(data));
 
 
   for (uint8_t i = 0; i < menu->childrenCount; i++) {
@@ -146,14 +168,14 @@ void handlePressPressMenu(const Packet &pkt) {
 
 
 void handlemmCommand(const char *input) {
-    Serial.println("mm ");
+  Serial.println("mm ");
 
-    uint8_t data1[] = {0xF0,0x00,0x41,0x4D,0x65,0x6E,0x75,0x20,0x32}; 
-    uint8_t data2[] = {0xF0,0x00,0x42,0x4D,0x65,0x6E,0x75,0x20,0x33}; 
-    uint8_t data3[] = {0xF0,0x01,0x00,0x54,0x69,0x74,0x6C,0x65}; 
-    sendPacket(0xC8, 0x3B, 0x21, data1, sizeof(data1));
-    sendPacket(0xC8, 0x3B, 0x21, data2, sizeof(data2));
-    sendPacket(0xC8, 0x3B, 0xA5, data3, sizeof(data3));
+  uint8_t data1[] = { 0xF0, 0x00, 0x41, 0x4D, 0x65, 0x6E, 0x75, 0x20, 0x32 };
+  uint8_t data2[] = { 0xF0, 0x00, 0x42, 0x4D, 0x65, 0x6E, 0x75, 0x20, 0x33 };
+  uint8_t data3[] = { 0xF0, 0x01, 0x00, 0x54, 0x69, 0x74, 0x6C, 0x65 };
+  sendPacket(0xC8, 0x3B, 0x21, data1, sizeof(data1));
+  sendPacket(0xC8, 0x3B, 0x21, data2, sizeof(data2));
+  sendPacket(0xC8, 0x3B, 0xA5, data3, sizeof(data3));
 }
 
 
