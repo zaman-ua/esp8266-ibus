@@ -69,7 +69,7 @@ Menu *currentMenu = &menuRoot;
 
 void displayMenu(Menu *menu) {
   for (uint8_t i = 0; i < menu->childrenCount; i++) {
-    sendUartCommand(0x60 + i, menu->children[i]->title);
+    sendUartCommand(0x40 + i, menu->children[i]->title);
   }
   if (menu->parent) {
     sendUartCommand(0x50, "Назад");
@@ -116,7 +116,7 @@ void handlePressCallMenu(const Packet &pkt) {
 
 void handlePressPressMenu(const Packet &pkt) {
   if (pkt.length == 3 && pkt.data[0] == 0xF0 && pkt.data[1] == 0x00) {
-    int input = pkt.data[2] - 39;
+    int input = pkt.data[2];
     Serial.print("Press Menu ");
     Serial.println(input);
 
