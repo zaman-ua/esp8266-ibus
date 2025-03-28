@@ -68,6 +68,12 @@ void setupMenu() {
 Menu *currentMenu = &menuRoot;
 
 void displayMenu(Menu *menu) {
+
+
+  uint8_t data[] = {0x62, 0x10, 0x41, 0x55, 0x58, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20}; 
+    sendPacket(0x68, 0x3B, 0x21, data, sizeof(data));
+
+
   for (uint8_t i = 0; i < menu->childrenCount; i++) {
     sendUartCommand(0x40 + i, menu->children[i]->title);
   }
@@ -107,8 +113,8 @@ void SendMenuTitile(const char *text) {
 
 
 void handlePressCallMenu(const Packet &pkt) {
-  if (pkt.length == 1 && pkt.data[0] == 0xB0) {
-    Serial.print("PressCallMenu");
+  if (pkt.length == 1 && pkt.data[0] == 0x30) {
+    Serial.println("PressCallMenu");
 
     displayMenu(currentMenu);
   }
@@ -121,19 +127,34 @@ void handlePressPressMenu(const Packet &pkt) {
     Serial.println(input);
 
 
-    if (input >= '1' && input <= '9') {
-      uint8_t index = input - '1';
+    if (input >= 0 && input <= 9) {
+      uint8_t index = input;
       if (index < currentMenu->childrenCount) {
         currentMenu = currentMenu->children[index];
         displayMenu(currentMenu);
       }
-    } else if (input == '0' && currentMenu->parent) {
+    } else if (input == 16 && currentMenu->parent) {
       currentMenu = currentMenu->parent;
       displayMenu(currentMenu);
     }
   }
 }
 
+
+
+
+
+
+void handlemmCommand(const char *input) {
+    Serial.println("mm ");
+
+    uint8_t data1[] = {0xF0,0x00,0x41,0x4D,0x65,0x6E,0x75,0x20,0x32}; 
+    uint8_t data2[] = {0xF0,0x00,0x42,0x4D,0x65,0x6E,0x75,0x20,0x33}; 
+    uint8_t data3[] = {0xF0,0x01,0x00,0x54,0x69,0x74,0x6C,0x65}; 
+    sendPacket(0xC8, 0x3B, 0x21, data1, sizeof(data1));
+    sendPacket(0xC8, 0x3B, 0x21, data2, sizeof(data2));
+    sendPacket(0xC8, 0x3B, 0xA5, data3, sizeof(data3));
+}
 
 
 void setup() {
@@ -161,10 +182,11 @@ void setup() {
   registerEvent(0xD0, 0x3F, 0xA0, handleReadErrorsCommand2);
 
 
-  registerEvent(0xF0, 0x3B, 0x48, handlePressCallMenu);
+  //registerEvent(0x50, 0xC8, 0x3B, handlePressCallMenu);
+  registerEvent(0xF0, 0x68, 0x48, handlePressCallMenu);
   registerEvent(0x3B, 0xC8, 0x31, handlePressPressMenu);
 
-
+  registerStringEvent("mm", handlemmCommand);
 
 
   setupMenu();
