@@ -7,15 +7,15 @@
 
 int counter = 0;
 
-// Определяем структуру для меню
+// РћРїСЂРµРґРµР»СЏРµРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ РјРµРЅСЋ
 struct Menu {
   const char *title;
   Menu *parent;
-  Menu *children[11];  // до 11 пунктов
+  Menu *children[11];  // РґРѕ 11 РїСѓРЅРєС‚РѕРІ
   uint8_t childrenCount;
 };
 
-// Определяем пункты меню
+// РћРїСЂРµРґРµР»СЏРµРј РїСѓРЅРєС‚С‹ РјРµРЅСЋ
 Menu menuRoot = { "Main menu", nullptr, {}, 0 };
 Menu menuSettings = { "Settings", &menuRoot, {}, 0 };
 Menu menuDiagnostics = { "Diagnostic", &menuRoot, {}, 0 };
@@ -30,15 +30,15 @@ Menu menuEngine = { "Engine", &menuDiagnostics, {}, 0 };
 Menu menuGearbox = { "Transmission", &menuDiagnostics, {}, 0 };
 
 
-// Максимум 17 символов
-Menu menuOption1 = { "АБВГДЕЁЖЗИЙКЛМН", &menuCoding, {}, 0 };
-Menu menuOption2 = { "ОПРСТУФХЦЧШЩЪЫЬ", &menuCoding, {}, 0 };
-Menu menuOption3= { "ЭЮЯабвгдеёжзийк", &menuCoding, {}, 0 };
-Menu menuOption4 = { "лмнопрстуфхцчшщ", &menuCoding, {}, 0 };
-Menu menuOption5 = { "ъыьэюя", &menuCoding, {}, 0 };
+// РњР°РєСЃРёРјСѓРј 17 СЃРёРјРІРѕР»РѕРІ
+Menu menuOption1 = { "РђР‘Р’Р“Р”Р•РЃР–Р—РР™РљР›РњРќ", &menuCoding, {}, 0 };
+Menu menuOption2 = { "РћРџР РЎРўРЈР¤РҐР¦Р§РЁР©РЄР«Р¬", &menuCoding, {}, 0 };
+Menu menuOption3= { "Р­Р®РЇР°Р±РІРіРґРµС‘Р¶Р·РёР№Рє", &menuCoding, {}, 0 };
+Menu menuOption4 = { "Р»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰", &menuCoding, {}, 0 };
+Menu menuOption5 = { "СЉС‹СЊСЌСЋСЏ", &menuCoding, {}, 0 };
 
 
-// Связываем меню
+// РЎРІСЏР·С‹РІР°РµРј РјРµРЅСЋ
 void setupMenu() {
   menuRoot.children[0] = &menuSettings;
   menuRoot.children[1] = &menuDiagnostics;
@@ -63,15 +63,15 @@ void setupMenu() {
   menuCoding.childrenCount = 5;
 }
 
-// Текущее меню
+// РўРµРєСѓС‰РµРµ РјРµРЅСЋ
 Menu *currentMenu = &menuRoot;
 
 void displayMenu(Menu *menu) {
-  // очистка меню
+  // РѕС‡РёСЃС‚РєР° РјРµРЅСЋ
   uint8_t data1[] = { 0xF0, 0x00, 0x20 };
   sendPacket(0x68, 0x3B, 0x21, data1, sizeof(data1));
 
-  // очистка заголовка
+  // РѕС‡РёСЃС‚РєР° Р·Р°РіРѕР»РѕРІРєР°
   uint8_t data[] = { 0xF0, 0x00, 0x20 };
   sendPacket(0x68, 0x3B, 0xA5, data, sizeof(data));
 
@@ -79,35 +79,35 @@ void displayMenu(Menu *menu) {
     sendUartCommand(0x40 + i, menu->children[i]->title);
   }
   if (menu->parent) {
-    sendUartCommand(0x50, "Назад");
+    sendUartCommand(0x50, "РќР°Р·Р°Рґ");
   }
   SendMenuTitile(menu->title);
 }
 
 void sendUartCommand(uint8_t command, const char *text) {
-  size_t textLen = strlen(text);  // Определяем длину строки
-  size_t dataSize = 3 + textLen;  // 3 байта заголовка + текст
+  size_t textLen = strlen(text);  // РћРїСЂРµРґРµР»СЏРµРј РґР»РёРЅСѓ СЃС‚СЂРѕРєРё
+  size_t dataSize = 3 + textLen;  // 3 Р±Р°Р№С‚Р° Р·Р°РіРѕР»РѕРІРєР° + С‚РµРєСЃС‚
   uint8_t data[dataSize];
 
-  // Заполняем массив данными
+  // Р—Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ РґР°РЅРЅС‹РјРё
   data[0] = 0xF0;
   data[1] = 0x00;
   data[2] = command;
-  memcpy(&data[3], text, textLen);  // Копируем текст в массив
+  memcpy(&data[3], text, textLen);  // РљРѕРїРёСЂСѓРµРј С‚РµРєСЃС‚ РІ РјР°СЃСЃРёРІ
 
   sendPacket(0xC8, 0x3B, 0x21, data, dataSize);
 }
 
 void SendMenuTitile(const char *text) {
-  size_t textLen = strlen(text);  // Определяем длину строки
-  size_t dataSize = 3 + textLen;  // 3 байта заголовка + текст
+  size_t textLen = strlen(text);  // РћРїСЂРµРґРµР»СЏРµРј РґР»РёРЅСѓ СЃС‚СЂРѕРєРё
+  size_t dataSize = 3 + textLen;  // 3 Р±Р°Р№С‚Р° Р·Р°РіРѕР»РѕРІРєР° + С‚РµРєСЃС‚
   uint8_t data[dataSize];
 
-  // Заполняем массив данными
+  // Р—Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ РґР°РЅРЅС‹РјРё
   data[0] = 0xF0;
   data[1] = 0x01;
   data[2] = 0x00;
-  memcpy(&data[3], text, textLen);  // Копируем текст в массив
+  memcpy(&data[3], text, textLen);  // РљРѕРїРёСЂСѓРµРј С‚РµРєСЃС‚ РІ РјР°СЃСЃРёРІ
 
   sendPacket(0xC8, 0x3B, 0xA5, data, dataSize);
 }
@@ -202,9 +202,9 @@ void loop() {
   }
 
   if (Serial.available()) {
-    char input[20] = { 0 };  // Очищаем буфер
+    char input[20] = { 0 };  // РћС‡РёС‰Р°РµРј Р±СѓС„РµСЂ
     int len = Serial.readBytesUntil('\n', input, sizeof(input) - 1);
-    input[len] = '\0';  // Гарантируем, что строка завершена
+    input[len] = '\0';  // Р“Р°СЂР°РЅС‚РёСЂСѓРµРј, С‡С‚Рѕ СЃС‚СЂРѕРєР° Р·Р°РІРµСЂС€РµРЅР°
     triggerStringEvents(input);
   }
 
