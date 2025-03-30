@@ -47,3 +47,30 @@ void updateCounter(int counter) {
   oled.print(counter);
   oled.update();
 }
+
+const char* utf8To1251(const char* source) {
+    static char buffer[256];  // Буфер для результата
+    uint8_t n;
+    int j = 0;
+    
+    for (int i = 0; source[i] != '\0' && j < sizeof(buffer) - 1; i++) {
+        n = (uint8_t)source[i];
+
+        if (n >= 0xC0) {
+            if (n == 0xD0) {
+                n = (uint8_t)source[++i];
+                if (n == 0x81) n = 0xA8; // Ё
+                else if (n >= 0x90 && n <= 0xBF) n += 0x30;
+            } else if (n == 0xD1) {
+                n = (uint8_t)source[++i];
+                if (n == 0x91) n = 0xB8; // ё
+                else if (n >= 0x80 && n <= 0x8F) n += 0x70;
+            }
+        }
+
+        buffer[j++] = (char)n;
+    }
+
+    buffer[j] = '\0';  // Завершаем строку
+    return buffer;
+}

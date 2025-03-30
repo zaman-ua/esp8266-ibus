@@ -31,11 +31,11 @@ Menu menuGearbox = { "Transmission", &menuDiagnostics, {}, 0 };
 
 
 // Максимум 17 символов
-Menu menuOption1 = { "АБВГДЕЁЖЗИЙКЛМН", &menuCoding, {}, 0 };
-Menu menuOption2 = { "ОПРСТУФХЦЧШЩЪЫЬ", &menuCoding, {}, 0 };
-Menu menuOption3= { "ЭЮЯабвгдеёжзийк", &menuCoding, {}, 0 };
-Menu menuOption4 = { "лмнопрстуфхцчшщ", &menuCoding, {}, 0 };
-Menu menuOption5 = { "ъыьэюя", &menuCoding, {}, 0 };
+Menu menuOption1 = { utf8To1251("АБВГДЕЁЖЗИЙКЛМН"), &menuCoding, {}, 0 };
+Menu menuOption2 = { utf8To1251("ОПРСТУФХЦЧШЩЪЫЬ"), &menuCoding, {}, 0 };
+Menu menuOption3= { utf8To1251("ЭЮЯабвгдеёжзийк"), &menuCoding, {}, 0 };
+Menu menuOption4 = { utf8To1251("лмнопрстуфхцчшщ"), &menuCoding, {}, 0 };
+Menu menuOption5 = { utf8To1251("ъыьэюя"), &menuCoding, {}, 0 };
 
 
 // Связываем меню
@@ -185,7 +185,6 @@ void setup() {
   registerEvent(0xD0, 0x3F, 0xA0, handleReadErrorsCommand2);
 
 
-  //registerEvent(0x50, 0xC8, 0x3B, handlePressCallMenu);
   registerEvent(0xF0, 0x68, 0x48, handlePressCallMenu);
   registerEvent(0x3B, 0x68, 0x31, handlePressPressMenu);
 
@@ -208,15 +207,5 @@ void loop() {
     triggerStringEvents(input);
   }
 
-
-
   updateCounter(counter++);
-
-  // // D0 07 BF 5B 03 03 08 1C 27
-  // uint8_t data[] = {0x03, 0x03, 0x08, 0x1C};
-  // sendPacket(0xD0, 0xBF, 0x5B, data);
-
-
-
-  // delay(3000);
 }

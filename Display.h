@@ -9,5 +9,6 @@ extern GyverOLED<SSD1306_128x64, OLED_NO_BUFFER> oled;
 void initDisplay();
 void displayPacket(const Packet &pkt);
 void updateCounter(int counter);
+const char* utf8To1251(const char* source);
 
 #endif
