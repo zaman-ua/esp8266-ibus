@@ -48,11 +48,11 @@ void updateCounter(int counter) {
   oled.update();
 }
 
-const char* utf8To1251(const char* source) {
-    static char buffer[256];  // Буфер для результата
+char* utf8To1251(const char* source) {
+    char buffer[256];  // Временный буфер для преобразования
     uint8_t n;
     int j = 0;
-    
+
     for (int i = 0; source[i] != '\0' && j < sizeof(buffer) - 1; i++) {
         n = (uint8_t)source[i];
 
@@ -72,5 +72,10 @@ const char* utf8To1251(const char* source) {
     }
 
     buffer[j] = '\0';  // Завершаем строку
-    return buffer;
+
+    // Выделяем динамическую память и копируем результат
+    char* result = new char[j + 1];
+    strcpy(result, buffer);
+    return result;
 }
+
